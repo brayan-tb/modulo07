@@ -10,6 +10,7 @@ import SelectStatus from './components/selectStatus/SelectStatus';
 import PhoneMask from './util/functions/PhoneMask';
 import CpfMask from './util/functions/CpfMask';
 import Valida_cpf_cnpj from './util/functions/ValidaCPF'
+import ListItem from './components/listItem/ListItem';
 
 class App extends React.Component {
 
@@ -132,7 +133,7 @@ class App extends React.Component {
                             <span id="saveText">Salvar</span>
                         </button>
 
-                        <button type="reset" id="reset" onClick={this.cleanInputs}>
+                        <button type="reset" id="reset" onClick={this.cleanInputs} disabled={this.state.isLoading}>
                             <span>Cancelar</span>
                         </button>
                     </div>
@@ -147,19 +148,7 @@ class App extends React.Component {
                 </form>
 
                 {this.state.isSubmitted && (
-                    <ul className="container list-item">
-                        <h2>Dados 📝</h2>
-                        <li>
-                            <div className="item-details">
-                                <div className="item"><i className="bx bx-user"></i>Nome: {this.state.data.name}</div>
-                                <div className="item"><i className="bx bxs-cake"></i>Idade: {this.state.data.age}</div>
-                                <div className="item"><i className="bx bx-face"></i>Gênero: {this.state.data.gender}</div>
-                                <div className="item"><i className="bx bx-heart"></i>Estado civil: {this.state.data.status}</div>
-                                <div className="item"><i className="bx bx-id-card"></i>CPF: {this.state.data.cpf}</div>
-                                <div className="item"> <i className="bx bx-phone"></i>Telefone: {this.state.data.phone}</div>
-                            </div>
-                        </li>
-                    </ul>
+                    <ListItem data={this.state.data}/>
                 )}
 
             </main>
