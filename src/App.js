@@ -68,6 +68,32 @@ class App extends React.Component {
         this.cleanInputs();
     }
 
+    cpfMask = value => {
+        value = value.replace(/\D/g, "")
+
+        if (value.length <= 11) {
+          value = value.replace(/(\d{3})(\d)/, "$1.$2")
+          value = value.replace(/(\d{3})(\d)/, "$1.$2")
+          value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2")
+        } else {
+          value = value.substring(0, 14);
+          value = value.replace(/^(\d{2})(\d)/, "$1.$2")
+          value = value.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+          value = value.replace(/\.(\d{3})(\d)/, ".$1/$2")
+          value = value.replace(/(\d{4})(\d)/, "$1-$2")
+        }
+      
+        return value
+    }
+
+    phoneMask = (value) => {
+        if (!value) return ""
+        value = value.replace(/\D/g,'')
+        value = value.replace(/(\d{2})(\d)/,"($1) $2")
+        value = value.replace(/(\d)(\d{4})$/,"$1-$2")
+        return value
+      }
+
     handleAlert(onError, message) {
         this.setState({ isError: onError, isMessage: true,  message: message });
         setTimeout(() => {
@@ -77,8 +103,12 @@ class App extends React.Component {
 
     handleChange(event) {
         const name = event.target.name;
-        const value = event.target.value;
+        let value = event.target.value;
         console.log({ [name]: value });
+
+        if(name === "phone") value = this.phoneMask(value)
+        if(name === "cpf") value = this.cpfMask(value)
+
         this.setState({
             formData: { ...this.state.formData, [name]: value }
         })
@@ -111,9 +141,9 @@ class App extends React.Component {
                     <Label for="status" text="Estado civil" required />
 
                     <SelectStatus selected={this.state.formData.status} onChange={this.handleChange} />
-                    <Input id="cpf" type="text" text="CPF" value={this.state.formData.cpf} onChange={this.handleChange} />
+                    <Input id="cpf" type="text" text="CPF" value={this.state.formData.cpf} onChange={this.handleChange} maskLimit="18" />
 
-                    <Input id="phone" type="text" text="Telefone" value={this.state.formData.phone} onChange={this.handleChange} />
+                    <Input id="phone" type="tel" text="Telefone" value={this.state.formData.phone} onChange={this.handleChange} maskLimit="15" />
 
                     <div className="btn-group">
                         <button type="submit" id="save">
