@@ -34,7 +34,9 @@ class App extends React.Component {
             },
 
             isSubmitted: false,
-            isError: false
+            isError: false,
+            isMessage: false,
+            message: ""
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -44,11 +46,33 @@ class App extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        this.setState({ isSubmitted: true });
-        this.setState({ data: this.state.formData });
+
+        if(this.state.formData.name.length === 0 || this.state.formData.age.length === 0 || this.state.formData.gender.length === 0 || this.state.formData.status.length === 0){
+            return this.handleAlert( true, "Atenção! Alguns campos obrigatórios não foram preenchidos 🚩");
+        }
+
+        if(this.state.formData.name.length < 3){
+            return this.handleAlert( true, "Atenção! O nome deve conter mais que 3 letras");
+        }
+
+        if(this.state.formData.age < 0 || this.state.formData.age  > 200){
+            return this.handleAlert( true, "Atenção! A idade informada é inválida!");
+        }
+
+        this.setState({ isSubmitted: true, data: this.state.formData });
+
+        this.handleAlert(false, "Salvo com sucesso 🥳")
+        
         console.log(this.state);
         console.log("enviado!");
-        this.cleanInputs()
+        this.cleanInputs();
+    }
+
+    handleAlert(onError, message) {
+        this.setState({ isError: onError, isMessage: true,  message: message });
+        setTimeout(() => {
+            this.setState({ isError: false, isMessage: false,  message: "" }); 
+        }, 4000);
     }
 
     handleChange(event) {
@@ -100,8 +124,13 @@ class App extends React.Component {
                         <button type="reset" id="reset" onClick={this.cleanInputs}>
                             <span>Cancelar</span>
                         </button>
-                        <span id="message"></span>
-                    </div>
+                   </div>
+
+                    {this.state.isMessage && (
+                        <div className="message">
+                            <span id="message" className={this.state.isError? 'red' : ''}>{this.state.message}</span>
+                        </div>
+                    )}
 
                 </form>
 

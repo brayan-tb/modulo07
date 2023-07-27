@@ -5,7 +5,7 @@ const FieldsetGenero = (props) =>{
         <fieldset className="radio-group">
         <legend>Gênero<span className="red">*</span></legend>
         <label htmlFor="yes">
-            <input type="radio" id="yes" name="gender" value="Masculino" onChange={props.onChange} checked={props.selected === 'Masculino'}/>
+            <input type="radio" id="yes" name="gender" value="Masculino" onChange={props.onChange} checked={props.selected === 'Masculino'} />
             <span tabIndex="0" className="radio-button"></span>
             <span htmlFor="yes">Masculino</span>
         </label>

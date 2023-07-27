@@ -241,7 +241,6 @@
     padding: 10px;
   }
   
-
   .loading {
     display: none;
     width: 19px;
@@ -322,6 +321,18 @@
     align-items: center; 
     gap: 12px; 
     flex-wrap: wrap;
+}
+
+.message{
+  color: #45a049;
+  margin-top: 12px;
+  padding: 12px;
+  transition: all ease-out 1s;
+  animation: bounce 1.3s ease-in-out 0.1s;
+}
+
+.red{
+  color: red;
 }
   
   /* Responsividade */
