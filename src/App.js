@@ -3,8 +3,8 @@ import './css/style.css';
 
 import React from 'react';
 import Input from './components/input/Input';
-import Loader from './components/loader/Loader';
 import Label from './components/label/Label';
+import Loader from './components/loader/Loader';
 import FieldsetGenero from './components/fieldset/FieldsetGenero';
 import SelectStatus from './components/selectStatus/SelectStatus';
 
@@ -44,14 +44,6 @@ class App extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        // const formData = new FormData(event.target)
-        // const formJson = Object.fromEntries(formData.entries());
-        // console.log(formJson);
-        // console.log([...formData.entries()]);
-        // const inputValue = formData.get("#name")
-        // console.log(formData)
-        // console.log(inputValue)
-
         this.setState({ isSubmitted: true });
         this.setState({ data: this.state.formData });
         console.log(this.state);
@@ -62,7 +54,7 @@ class App extends React.Component {
     handleChange(event) {
         const name = event.target.name;
         const value = event.target.value;
-        console.log({[name]: value});
+        console.log({ [name]: value });
         this.setState({
             formData: { ...this.state.formData, [name]: value }
         })
@@ -82,28 +74,22 @@ class App extends React.Component {
     }
 
     render() {
-        // console.log("render!");
         return (
             <main>
                 <form onSubmit={this.handleSubmit} className="container">
                     <h2>Cadastro 📋</h2>
 
-                    <Label for="name" text="Nome" required />
-                    <Input id="name" type="text" placeholder="Nome..." value={this.state.formData.name} onChange={this.handleChange} />
+                    <Input id="name" type="text" text="Nome" value={this.state.formData.name} onChange={this.handleChange} required />
 
-                    <Label for="age" text="Idade" required />
-                    <Input id="age" type="number" placeholder="Idade..." value={this.state.formData.age} onChange={this.handleChange} />
-
-                    <FieldsetGenero onChange={this.handleChange} />
+                    <Input id="age" type="number" text="Idade" value={this.state.formData.age} onChange={this.handleChange} required />
+                    <FieldsetGenero onChange={this.handleChange} selected={this.state.formData.gender} />
 
                     <Label for="status" text="Estado civil" required />
+
                     <SelectStatus selected={this.state.formData.status} onChange={this.handleChange} />
+                    <Input id="cpf" type="text" text="CPF" value={this.state.formData.cpf} onChange={this.handleChange} />
 
-                    <Label for="cpf" text="CPF" />
-                    <Input id="cpf" type="text" placeholder="CPF..." value={this.state.formData.cpf} onChange={this.handleChange} />
-
-                    <Label for="phone" text="Telefone" />
-                    <Input id="phone" type="text" placeholder="Telefone..." value={this.state.formData.phone} onChange={this.handleChange} />
+                    <Input id="phone" type="text" text="Telefone" value={this.state.formData.phone} onChange={this.handleChange} />
 
                     <div className="btn-group">
                         <button type="submit" id="save">
@@ -134,7 +120,6 @@ class App extends React.Component {
                         </li>
                     </ul>
                 )}
-
 
             </main>
         );
