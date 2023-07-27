@@ -8,7 +8,7 @@ import Loader from './components/loader/Loader';
 import FieldsetGenero from './components/fieldset/FieldsetGenero';
 import SelectStatus from './components/selectStatus/SelectStatus';
 import PhoneMask from './util/functions/PhoneMask';
-import CpfMask  from './util/functions/CpfMask';
+import CpfMask from './util/functions/CpfMask';
 import Valida_cpf_cnpj from './util/functions/ValidaCPF'
 
 class App extends React.Component {
@@ -39,6 +39,7 @@ class App extends React.Component {
             isSubmitted: false,
             isError: false,
             isMessage: false,
+            isLoading: false,
             message: ""
         }
 
@@ -66,19 +67,19 @@ class App extends React.Component {
             return this.handleAlert(true, "O CPF/CNPJ informado é inválido.");
         }
 
-        this.setState({ isSubmitted: true, data: this.state.formData });
+        this.handleAlert(false, "", true)
+        setTimeout(() => {
+            this.setState({ isSubmitted: true, data: this.state.formData });
+            this.handleAlert(false, "Salvo com sucesso 🥳")
+            this.cleanInputs();
+        }, 2000);
 
-        this.handleAlert(false, "Salvo com sucesso 🥳")
-
-        console.log(this.state);
-        console.log("enviado!");
-        this.cleanInputs();
     }
 
-    handleAlert(onError, message) {
-        this.setState({ isError: onError, isMessage: true, message: message });
+    handleAlert(onError, message, onLoading) {
+        this.setState({ isError: onError, isMessage: true, message: message, isLoading: onLoading });
         setTimeout(() => {
-            this.setState({ isError: false, isMessage: false, message: "" });
+            this.setState({ isError: false, isMessage: false, message: "", isLoading: false });
         }, 4000);
     }
 
@@ -122,14 +123,13 @@ class App extends React.Component {
                     <Label for="status" text="Estado civil" required />
 
                     <SelectStatus selected={this.state.formData.status} onChange={this.handleChange} />
-                    <Input id="cpf" type="text" text="CPF" value={this.state.formData.cpf} onChange={this.handleChange} maskLimit="18" />
+                    <Input id="cpf" type="text" text="CPF" value={this.state.formData.cpf} onChange={this.handleChange} />
 
-                    <Input id="phone" type="tel" text="Telefone" value={this.state.formData.phone} onChange={this.handleChange} maskLimit="15" />
+                    <Input id="phone" type="tel" text="Telefone" value={this.state.formData.phone} onChange={this.handleChange} />
 
                     <div className="btn-group">
-                        <button type="submit" id="save">
+                        <button type="submit" id="save" disabled={this.state.isLoading}>
                             <span id="saveText">Salvar</span>
-                            <Loader />
                         </button>
 
                         <button type="reset" id="reset" onClick={this.cleanInputs}>
@@ -140,6 +140,7 @@ class App extends React.Component {
                     {this.state.isMessage && (
                         <div className="message">
                             <span id="message" className={this.state.isError ? 'red' : ''}>{this.state.message}</span>
+                            {this.state.isLoading && (<Loader />)}
                         </div>
                     )}
 

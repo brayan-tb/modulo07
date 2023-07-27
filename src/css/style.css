@@ -282,7 +282,7 @@ legend {
 /* LOADER 2 */
 
 #loader-2 span {
-  display: none;
+  display: inline-block;
   /* inline-block */
   width: 10px;
   height: 10px;
