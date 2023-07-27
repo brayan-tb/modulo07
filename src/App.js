@@ -7,6 +7,9 @@ import Label from './components/label/Label';
 import Loader from './components/loader/Loader';
 import FieldsetGenero from './components/fieldset/FieldsetGenero';
 import SelectStatus from './components/selectStatus/SelectStatus';
+import PhoneMask from './util/functions/PhoneMask';
+import CpfMask  from './util/functions/CpfMask';
+import Valida_cpf_cnpj from './util/functions/ValidaCPF'
 
 class App extends React.Component {
 
@@ -47,57 +50,35 @@ class App extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
 
-        if(this.state.formData.name.length === 0 || this.state.formData.age.length === 0 || this.state.formData.gender.length === 0 || this.state.formData.status.length === 0){
-            return this.handleAlert( true, "Atenção! Alguns campos obrigatórios não foram preenchidos 🚩");
+        if (this.state.formData.name.length === 0 || this.state.formData.age.length === 0 || this.state.formData.gender.length === 0 || this.state.formData.status.length === 0) {
+            return this.handleAlert(true, "Atenção! Alguns campos obrigatórios não foram preenchidos 🚩");
         }
 
-        if(this.state.formData.name.length < 3){
-            return this.handleAlert( true, "Atenção! O nome deve conter mais que 3 letras");
+        if (this.state.formData.name.length < 3) {
+            return this.handleAlert(true, "Atenção! O nome deve conter mais que 3 letras");
         }
 
-        if(this.state.formData.age < 0 || this.state.formData.age  > 200){
-            return this.handleAlert( true, "Atenção! A idade informada é inválida!");
+        if (this.state.formData.age < 0 || this.state.formData.age > 200) {
+            return this.handleAlert(true, "Atenção! A idade informada é inválida!");
+        }
+
+        if (Valida_cpf_cnpj(this.state.formData.cpf)) {
+            return this.handleAlert(true, "O CPF/CNPJ informado é inválido.");
         }
 
         this.setState({ isSubmitted: true, data: this.state.formData });
 
         this.handleAlert(false, "Salvo com sucesso 🥳")
-        
+
         console.log(this.state);
         console.log("enviado!");
         this.cleanInputs();
     }
 
-    cpfMask = value => {
-        value = value.replace(/\D/g, "")
-
-        if (value.length <= 11) {
-          value = value.replace(/(\d{3})(\d)/, "$1.$2")
-          value = value.replace(/(\d{3})(\d)/, "$1.$2")
-          value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2")
-        } else {
-          value = value.substring(0, 14);
-          value = value.replace(/^(\d{2})(\d)/, "$1.$2")
-          value = value.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
-          value = value.replace(/\.(\d{3})(\d)/, ".$1/$2")
-          value = value.replace(/(\d{4})(\d)/, "$1-$2")
-        }
-      
-        return value
-    }
-
-    phoneMask = (value) => {
-        if (!value) return ""
-        value = value.replace(/\D/g,'')
-        value = value.replace(/(\d{2})(\d)/,"($1) $2")
-        value = value.replace(/(\d)(\d{4})$/,"$1-$2")
-        return value
-      }
-
     handleAlert(onError, message) {
-        this.setState({ isError: onError, isMessage: true,  message: message });
+        this.setState({ isError: onError, isMessage: true, message: message });
         setTimeout(() => {
-            this.setState({ isError: false, isMessage: false,  message: "" }); 
+            this.setState({ isError: false, isMessage: false, message: "" });
         }, 4000);
     }
 
@@ -106,8 +87,8 @@ class App extends React.Component {
         let value = event.target.value;
         console.log({ [name]: value });
 
-        if(name === "phone") value = this.phoneMask(value)
-        if(name === "cpf") value = this.cpfMask(value)
+        if (name === "phone") value = PhoneMask(value)
+        if (name === "cpf") value = CpfMask(value)
 
         this.setState({
             formData: { ...this.state.formData, [name]: value }
@@ -154,11 +135,11 @@ class App extends React.Component {
                         <button type="reset" id="reset" onClick={this.cleanInputs}>
                             <span>Cancelar</span>
                         </button>
-                   </div>
+                    </div>
 
                     {this.state.isMessage && (
                         <div className="message">
-                            <span id="message" className={this.state.isError? 'red' : ''}>{this.state.message}</span>
+                            <span id="message" className={this.state.isError ? 'red' : ''}>{this.state.message}</span>
                         </div>
                     )}
 
